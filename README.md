@@ -3,7 +3,7 @@ A simple script to automate my compilance of `sys-kernel/gentoo-sources`, PERSON
 
 ## What does it do
 
-This script automates Linux kernel compilance and copies necessary files from /tmp/linux to /usr/src/linux for out-of-tree module compilance.
+This script automates Linux kernel compilance and copies necessary files from current working directory to the symbolic link /usr/src/linux for out-of-tree module compilance.
 
 > Compiling `sys-kernel/gentoo-sources` with Gentoo's distribution kernel configuration will need at least 23 GB of disk space.
 >
