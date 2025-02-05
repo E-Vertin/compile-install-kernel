@@ -1,0 +1,64 @@
+#!/bin/sh
+
+### This script automates kernel compilance and copies necessary files from /tmp/linux to /usr/src/linux for out-of-tree module compilance.
+
+# Compile bzImages and modules
+echo -e "\e[34m * Stage 1 - Building bzImages and modules..."
+echo -e "\e[0m "
+make -j24 -s
+
+# Install modules
+echo -e "\e[34m * Stage 2 - Installing modules (and stripping)..."
+echo -e "\e[0m "
+make INSTALL_MOD_STRIP=1 modules_install -j12 -s
+
+# Copy bzImage and headers
+echo -e "\e[34m * Stage 3 - Copying bzImages and headers..."
+echo -e "\e[0m "
+cp -r ./arch/x86* /usr/src/linux/arch
+cp -r ./include /usr/src/linux
+cp ./vmlinux /usr/src/linux
+
+# Copy configuration, scripts and module map
+echo -e "\e[34m * Stage 4 - Copying kernel configuration, scripts and module map..."
+echo -e "\e[0m "
+cp ./System.map /usr/src/linux
+cp ./Module.symvers /usr/src/linux
+cp ./.config /usr/src/linux
+cp -r ./scripts /usr/src/linux
+
+# Prepare source code
+echo -e "\e[34m * Stage 5 - Preparing source code..."
+echo -e "\e[0m "
+cd /usr/src/linux && make prepare -j24 -s
+
+# Build out-of-tree modules
+echo -e "\e[34m * Stage 6 - Running \e[36m emerge -ag @module-rebuild --quiet-build \e[34m to build out-of-tree modules..."
+echo -e "\e[0m "
+emerge -ag @module-rebuild --quiet-build
+
+# Install kernel image
+echo -e "\e[34m * Stage 7 - Installing kernel to ESP..."
+echo -e "\e[0m "
+cd /usr/src/linux && make install -s -q
+
+# Finished
+echo -e "\e[32m * Finished! Ready to reboot."
+
+
+
+#   A simple script to automate the compilance of sys-kernel/gentoo-sources.
+#   compile-install-kernel  Copyright (C) 2025  Hoshimi Miyabi (orchidslee@outlook.com)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see https://www.gnu.org/licenses/.
