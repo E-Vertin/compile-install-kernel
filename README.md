@@ -1,6 +1,8 @@
 # compile-install-kernel
 A simple script to automate my compilance of `sys-kernel/gentoo-sources`, PERSONAL USE ONLY!
 
+The script was only tested on Gentoo Linux with the `sys-kernel/installkernel` configured to use `dracut` to generate a unified kernel image and install in `systemd`'s kernel-install layout for `systemd-boot`.
+
 ## What does it do
 
 This script automates Linux kernel compilance and copies necessary files from current working directory to the symbolic link /usr/src/linux for out-of-tree module compilance.
