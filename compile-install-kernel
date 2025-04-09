@@ -2,6 +2,13 @@
 
 ### This script automates kernel compilance and copies necessary files from /tmp/linux to /usr/src/linux for out-of-tree module compilance.
 
+echo -e "   This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+     "
+echo -e "\e[32m *** Starting kernel compilation... ***"
+echo -e "\e[0m "
+
 # Compile bzImages and modules
 echo -e "\e[34m * Stage 1 - Building bzImages and modules..."
 echo -e "\e[0m "
@@ -35,7 +42,7 @@ cd /usr/src/linux && make prepare -j$(nproc) -s
 # Build out-of-tree modules
 echo -e "\e[34m * Stage 6 - Running \e[36m emerge -ag @module-rebuild --quiet-build \e[34m to build out-of-tree modules..."
 echo -e "\e[0m "
-emerge -ag @module-rebuild --quiet-build
+emerge -g @module-rebuild --quiet-build
 
 # Install kernel image
 echo -e "\e[34m * Stage 7 - Installing kernel to ESP..."
