@@ -2,10 +2,10 @@
 
 ### This script automates kernel compilance and copies necessary files from /tmp/linux to /usr/src/linux for out-of-tree module compilance.
 
-echo -e "   This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-     "
+echo  "    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+
 echo -e "\e[32m *** Starting kernel compilation... ***"
 echo -e "\e[0m "
 
