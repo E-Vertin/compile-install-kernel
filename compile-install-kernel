@@ -40,9 +40,9 @@ echo -e "\e[0m "
 cd /usr/src/linux && make prepare -j$(nproc) -s
 
 # Build out-of-tree modules
-echo -e "\e[34m * Stage 6 - Running \e[36m emerge -ag @module-rebuild --quiet-build \e[34m to build out-of-tree modules..."
+echo -e "\e[34m * Stage 6 - Running \e[36m emerge @module-rebuild --quiet-build \e[34m to build out-of-tree modules..."
 echo -e "\e[0m "
-emerge -g @module-rebuild --quiet-build
+emerge @module-rebuild --quiet-build
 
 # Install kernel image
 echo -e "\e[34m * Stage 7 - Installing kernel to ESP..."
