@@ -12,7 +12,7 @@ echo -e "\e[0m "
 # Compile bzImages and modules
 echo -e "\e[34m * Stage 1 - Building bzImages and modules..."
 echo -e "\e[0m "
-make -j$(nproc) -s
+make all KCFLAGS="-O3" -j$(nproc) -s
 
 # Install modules
 echo -e "\e[34m * Stage 2 - Installing modules (and stripping)..."
