@@ -5,6 +5,7 @@ A simple script to automate my compilance of `sys-kernel/gentoo-sources`, PERSON
 The script was only tested on Gentoo Linux with the `sys-kernel/installkernel` configured to invoke `dracut` to generate a unified kernel image and install it in `systemd`'s kernel-install layout for `systemd-boot`. 
 
 > This is my USE flags for `sys-kernel/installkernel`
+> 
 > `sys-kernel/installkernel[dracut systemd systemd-boot uki]`
 
 Please note that the configured `sys-kernel/installkernel` interprets the command `make install`.
