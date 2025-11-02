@@ -1,71 +1,86 @@
 #!/bin/sh
 
-### This script automates kernel compilance and copies necessary files from /tmp/linux to /usr/src/linux for out-of-tree module compilance.
+# ==============================================================================
+# compile-install-kernel  Copyright (C) 2025  Hoshimi Miyabi (orchidslee@outlook.com)
+#
+# A simple script to automate the compilation and installation of sys-kernel/gentoo-sources,
+# and prepares the source tree for out-of-tree module compilation.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see https://www.gnu.org/licenses/.
+# ==============================================================================
 
-echo  "    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+# Bail out if there are any error and unused variable
+set -eu
 
-echo -e "\e[32m *** Starting kernel compilation... ***"
-echo -e "\e[0m "
+# Define colours
+COLOUR_GREEN='\033[32m'
+COLOUR_BLUE='\033[34m'
+COLOUR_CYAN='\033[36m'
+COLOUR_RESET='\033[0m'
 
-# Compile bzImages and modules
-echo -e "\e[34m * Stage 1 - Building bzImages and modules..."
-echo -e "\e[0m "
-make all KCFLAGS="-O3" -j$(nproc) -s
+# Disclaimer
+printf '    This program is distributed in the hope that it will be useful,\n'
+printf '    but WITHOUT ANY WARRANTY; without even the implied warranty of\n'
+printf '    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n'
 
-# Install modules
-echo -e "\e[34m * Stage 2 - Installing modules (and stripping)..."
-echo -e "\e[0m "
-make INSTALL_MOD_STRIP=1 modules_install -j$(nproc) -s
+# Start compilation
+printf "${COLOUR_GREEN} *** Starting kernel compilation... ***${COLOUR_RESET}\n"
+printf '\n'
 
-# Copy bzImage and headers
-echo -e "\e[34m * Stage 3 - Copying bzImages and headers..."
-echo -e "\e[0m "
+# Stage 1 - Building bzImages and modules
+printf "${COLOUR_BLUE} * Stage 1 - Building bzImages and modules...${COLOUR_RESET}\n"
+printf '\n'
+make all KCFLAGS="-O3" -j"$(nproc)" -s
+
+# Stage 2 - Installing modules (and stripping)
+printf "${COLOUR_BLUE} * Stage 2 - Installing modules (and stripping)...${COLOUR_RESET}\n"
+printf '\n'
+make INSTALL_MOD_STRIP=1 modules_install -j"$(nproc)" -s
+
+# Stage 3 - Copying bzImages and headers
+printf "${COLOUR_BLUE} * Stage 3 - Copying bzImages and headers...${COLOUR_RESET}\n"
+printf '\n'
+# Copy necessary files to /usr/src/linux for out-of-tree modules to install
 cp -r ./arch/x86* /usr/src/linux/arch
 cp -r ./include /usr/src/linux
 cp ./vmlinux /usr/src/linux
 
-# Copy configuration, scripts and module map
-echo -e "\e[34m * Stage 4 - Copying kernel configuration, scripts and module map..."
-echo -e "\e[0m "
+# Stage 4 - Copying kernel configuration, scripts and module map
+printf "${COLOUR_BLUE} * Stage 4 - Copying kernel configuration, scripts and module map...${COLOUR_RESET}\n"
+printf '\n'
 cp ./System.map /usr/src/linux
 cp ./Module.symvers /usr/src/linux
 cp ./.config /usr/src/linux
 cp -r ./scripts /usr/src/linux
 
-# Prepare source code
-echo -e "\e[34m * Stage 5 - Preparing source code..."
-echo -e "\e[0m "
-cd /usr/src/linux && make prepare -j$(nproc) -s
+# Stage 5 - Preparing source code
+printf "${COLOUR_BLUE} * Stage 5 - Preparing source code...${COLOUR_RESET}\n"
+printf '\n'
+( cd /usr/src/linux && make prepare -j"$(nproc)" -s )
 
-# Build out-of-tree modules
-echo -e "\e[34m * Stage 6 - Running \e[36m emerge @module-rebuild --quiet-build \e[34m to build out-of-tree modules..."
-echo -e "\e[0m "
+# Stage 6 - Running emerge @module-rebuild to build out-of-tree modules
+printf "${COLOUR_BLUE} * Stage 6 - Running ${COLOUR_CYAN} emerge @module-rebuild --quiet-build ${COLOUR_BLUE} to build out-of-tree modules...${COLOUR_RESET}\n"
+printf '\n'
 emerge @module-rebuild --quiet-build
 
-# Install kernel image
-echo -e "\e[34m * Stage 7 - Installing kernel to ESP..."
-echo -e "\e[0m "
-cd /usr/src/linux && make install -s
+# Stage 7 - Installing kernel to ESP
+printf "${COLOUR_BLUE} * Stage 7 - Installing kernel to ESP...${COLOUR_RESET}\n"
+printf '\n'
+( cd /usr/src/linux && make install -s )
 
 # Finished
-echo -e "\e[32m * Finished! Ready to reboot."
+printf "${COLOUR_GREEN} * Finished!${COLOUR_RESET}\n"
+printf 'Ready to reboot.\n'
 
-
-
-#   A simple script to automate the compilance of sys-kernel/gentoo-sources.
-#   compile-install-kernel  Copyright (C) 2025  Hoshimi Miyabi (orchidslee@outlook.com)
-#
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program.  If not, see https://www.gnu.org/licenses/.
+exit 0
